@@ -1,0 +1,12 @@
+# CMake files
+**/build/**
+
+# Code::Blocks files
+*.cbp
+
+# Visual Studio files
+**/.vs/**
+**/out/**
+
+# VS Code files
+**/.vscode/**
