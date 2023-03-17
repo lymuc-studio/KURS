@@ -3,6 +3,13 @@ add_executable(
 	./src/GameApp/main.cpp
 )
 
+target_link_libraries(
+	kursapp
+	
+	PRIVATE
+	SDL3-static
+)
+
 set_target_properties(
 	kursapp
 	
