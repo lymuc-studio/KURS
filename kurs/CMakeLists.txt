@@ -1,5 +1,6 @@
 add_executable(
 	kursapp
+	./src/Core/TypeID.cpp
 	./src/GameApp/main.cpp
 )
 

@@ -9,6 +9,7 @@
 #include "Core/CompilerInfo.hpp"
 #include "Core/FuncName.hpp"
 #include "Core/TypeName.hpp"
+#include "Core/TypeID.hpp"
 
 int main()
 {
