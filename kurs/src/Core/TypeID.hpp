@@ -6,7 +6,7 @@
 
 namespace kurs::detail
 {
-	enum TypeID : std::ptrdiff_t
+	enum class TypeID : std::ptrdiff_t
 	{
 		Undefined = -1
 	};
