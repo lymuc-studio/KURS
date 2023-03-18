@@ -1,6 +1,6 @@
 #pragma once
 
-#include "kurspch.h"
+#include "kurspch.hpp"
 
 #define KURS_COMPILER_GCC   0
 #define KURS_COMPILER_CLANG 1

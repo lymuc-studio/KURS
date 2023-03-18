@@ -22,7 +22,7 @@ target_precompile_headers(
 	kursapp
 
 	PRIVATE
-	./src/kurspch.h
+	./src/kurspch.hpp
 )
 
 set_target_properties(

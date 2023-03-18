@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "kurspch.h"
+#include "kurspch.hpp"
 
 #include "Core/FuncName.hpp"
 #include "Core/CompilerInfo.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "kurspch.h"
+#include "kurspch.hpp"
 
 #include "Core/CompilerInfo.hpp"
 	
