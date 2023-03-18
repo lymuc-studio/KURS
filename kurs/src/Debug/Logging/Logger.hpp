@@ -13,7 +13,7 @@
 	__LINE__,                                                          \
 	KURS_FUNCNAME,                                                     \
 	format,                                                            \
-	##__VA_ARGS__);
+	##__VA_ARGS__)
 #endif
 
 namespace kurs
