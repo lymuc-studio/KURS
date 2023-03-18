@@ -5,6 +5,7 @@
 #include <SDL3/SDL.h>
 
 #include "kurspch.h"
+#include "Core/CompilerInfo.hpp"
 
 int main()
 {
@@ -19,6 +20,8 @@ int main()
 
 		return EXIT_FAILURE;
 	}
+
+	std::cout << kurs::getCompilerName() << " edition" << std::endl;
 
 	SDL_ShowSimpleMessageBox(
 		SDL_MESSAGEBOX_INFORMATION,
