@@ -10,6 +10,7 @@
 #include "Core/FuncName.hpp"
 #include "Core/TypeName.hpp"
 #include "Core/TypeID.hpp"
+#include "Core/FormatString.hpp"
 
 int main()
 {
@@ -27,6 +28,8 @@ int main()
 
 	std::cout << kurs::getCompilerName() << " edition" << std::endl;
 	std::cout << kurs::getTypeName<std::string>() << std::endl;
+
+	std::cout << kurs::formatString("%s, %d, %f\n", "Max", 18, 47.5f);
 
 	SDL_ShowSimpleMessageBox(
 		SDL_MESSAGEBOX_INFORMATION,

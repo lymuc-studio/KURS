@@ -1,7 +1,10 @@
 #pragma once
 
+#include <cstdio>
+#include <cstdlib>
 #include <cstdint>
 #include <cstddef>
+#include <cstdarg>
 
 #include <string>
 #include <string_view>
