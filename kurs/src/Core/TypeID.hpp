@@ -6,9 +6,9 @@
 
 namespace kurs::detail
 {
-	enum class TypeID : std::ptrdiff_t
+	enum TypeID : std::ptrdiff_t
 	{
-		Undefined = -1
+		TypeID_Undefined = -1
 	};
 
 	TypeID generateTypeID();
@@ -17,6 +17,7 @@ namespace kurs::detail
 namespace kurs
 {
 	using detail::TypeID;
+	using detail::TypeID_Undefined;
 
 	template<typename T>
 	TypeID getTypeID()
