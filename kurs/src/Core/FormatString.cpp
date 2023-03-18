@@ -11,17 +11,16 @@ namespace kurs
 	
 		va_list args_copy;
 		va_copy(args_copy, args);
-
 		size_t requiredSize = vsnprintf(nullptr, 0, format.data(), args_copy) + 1;
+		va_end(args_copy);
+
 		if (requiredSize > c_NiceCaseBufferSize)
 		{
 			worstCaseBuffer = std::make_unique<char[]>(requiredSize);
 			utilizedBuffer = worstCaseBuffer.get();
 		}
 
-		vsnprintf(utilizedBuffer, requiredSize, format.data(), args_copy);
-
-		va_end(args_copy);
+		vsnprintf(utilizedBuffer, requiredSize, format.data(), args);
 
 		return std::string(utilizedBuffer, requiredSize);
 	}
