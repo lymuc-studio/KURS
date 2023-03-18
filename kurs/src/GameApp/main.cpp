@@ -5,7 +5,10 @@
 #include <SDL3/SDL.h>
 
 #include "kurspch.h"
+
 #include "Core/CompilerInfo.hpp"
+#include "Core/FuncName.hpp"
+#include "Core/TypeName.hpp"
 
 int main()
 {
@@ -22,6 +25,7 @@ int main()
 	}
 
 	std::cout << kurs::getCompilerName() << " edition" << std::endl;
+	std::cout << kurs::getTypeName<std::string>() << std::endl;
 
 	SDL_ShowSimpleMessageBox(
 		SDL_MESSAGEBOX_INFORMATION,
