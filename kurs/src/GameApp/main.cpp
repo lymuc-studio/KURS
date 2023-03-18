@@ -4,6 +4,8 @@
 
 #include <SDL3/SDL.h>
 
+#include "kurspch.h"
+
 int main()
 {
 	if (0 != SDL_Init(SDL_INIT_EVERYTHING))

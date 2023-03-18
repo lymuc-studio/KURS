@@ -3,11 +3,24 @@ add_executable(
 	./src/GameApp/main.cpp
 )
 
+target_include_directories(
+	kursapp
+	PRIVATE
+	./src
+)
+
 target_link_libraries(
 	kursapp
 	
 	PRIVATE
 	SDL3-static
+)
+
+target_precompile_headers(
+	kursapp
+
+	PRIVATE
+	./src/kurspch.h
 )
 
 set_target_properties(
@@ -16,4 +29,8 @@ set_target_properties(
 	PROPERTIES
 	CXX_STANDARD 17
 	CXX_STANDARD_REQUIRED TRUE
+
+	# Might be useful to measure compile and link time
+	RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time"
+	RULE_LAUNCH_LINK "${CMAKE_COMMAND} -E time"
 )
