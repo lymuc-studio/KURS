@@ -2,6 +2,10 @@ add_executable(
 	kursapp
 	./src/Core/TypeID.cpp
 	./src/Core/FormatString.cpp
+	./src/Debug/Logging/Logger.cpp
+	./src/Debug/Logging/TimedLogFormatter.cpp
+	./src/Debug/Logging/ConsoleLogWriter.cpp
+	./src/Debug/Logging/FileLogWriter.cpp
 	./src/GameApp/main.cpp
 )
 

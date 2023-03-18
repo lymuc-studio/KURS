@@ -4,7 +4,7 @@
 
 #include <SDL3/SDL.h>
 
-#include "kurspch.h"
+#include "kurspch.hpp"
 
 #include "Core/CompilerInfo.hpp"
 #include "Core/FuncName.hpp"
@@ -12,29 +12,35 @@
 #include "Core/TypeID.hpp"
 #include "Core/FormatString.hpp"
 
+#include "Debug/Logging/Logger.hpp"
+#include "Debug/Logging/ConsoleLogWriter.hpp"
+#include "Debug/Logging/FileLogWriter.hpp"
+#include "Debug/Logging/TimedLogFormatter.hpp"
+
 int main()
 {
+	kurs::Logger::Get()
+		.SetFormatter(std::make_unique<kurs::TimedLogFormatter>())
+		.SetWriter(std::make_unique<kurs::FileLogWriter>());
+
 	if (0 != SDL_Init(SDL_INIT_EVERYTHING))
 	{
+		KURS_LOG(Warn, "Failed to initialize %s: %s", "SDL3", SDL_GetError());
+
 		SDL_ShowSimpleMessageBox(
-			SDL_MESSAGEBOX_ERROR,
+			SDL_MESSAGEBOX_WARNING,
 			"KURS",
 			"Failed to initialize SDL3",
 			nullptr
 		);
-
-		return EXIT_FAILURE;
 	}
 
-	std::cout << kurs::getCompilerName() << " edition" << std::endl;
-	std::cout << kurs::getTypeName<std::string>() << std::endl;
-
-	std::cout << kurs::formatString("%s, %d, %f\n", "Max", 18, 47.5f);
+	KURS_LOG(Info, "Compiler: %s", kurs::getCompilerName().data());
 
 	SDL_ShowSimpleMessageBox(
 		SDL_MESSAGEBOX_INFORMATION,
 		"KURS",
-		"Hello KURS!  |  Привет КУРС!",
+		"EN: Hello KURS!\nRU: Привет, КУРС!",
 		nullptr
 	);
 
@@ -52,7 +58,14 @@ int main()
 		{
 			if (event.type == SDL_EVENT_QUIT)
 			{
+				KURS_LOG(Info, "Window close event");
 				running = false;
+			}
+
+			if (event.type == SDL_EVENT_KEY_DOWN)
+			{
+				SDL_Keycode keyCode = SDL_GetKeyFromScancode(event.key.keysym.scancode);
+				KURS_LOG(Debug, "Key pressed: %s", SDL_GetKeyName(keyCode));
 			}
 		}
 	}
