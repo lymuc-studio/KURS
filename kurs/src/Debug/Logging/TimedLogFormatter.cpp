@@ -21,7 +21,7 @@ namespace kurs
 			return std::string();
 		}
 
-		constexpr std::array<std::string_view, LogLevel_Count_> levelRepr
+		constexpr std::array<std::string_view, LogLevel_NumLevels_> levelRepr
 		{
 			"[debug]",
 			"[trace]",

@@ -30,9 +30,13 @@ namespace kurs
 		data.Message = formatString(format, args);
 		va_end(args);
 	
-		if (m_Formatter && m_Writer)
+		if (m_Formatter && !m_Writer.empty())
 		{
-			m_Writer->WriteLine(m_Formatter->FormatData(data));
+			auto logLine = m_Formatter->FormatData(data);
+			for (auto& writer : m_Writer)
+			{
+				writer->WriteLine(logLine);
+			}
 		}
 	}
 
@@ -42,9 +46,13 @@ namespace kurs
 		return *this;
 	}
 
-	Logger& Logger::SetWriter(std::unique_ptr<ILogWriter> writer)
+	Logger& Logger::AddWriter(std::unique_ptr<ILogWriter> writer)
 	{
-		m_Writer = std::move(writer);
+		if (writer)
+		{
+			m_Writer.emplace_back(std::move(writer));
+		}
+
 		return *this;
 	}
 }

@@ -26,7 +26,7 @@ namespace kurs
 		LogLevel_Warn,
 		LogLevel_Error,
 
-		LogLevel_Count_,
+		LogLevel_NumLevels_,
 	};
 
 	struct LogData
@@ -69,13 +69,13 @@ namespace kurs
 		);
 
 		Logger& SetFormatter(std::unique_ptr<ILogFormatter> formatter);
-		Logger& SetWriter(std::unique_ptr<ILogWriter> writer);
+		Logger& AddWriter(std::unique_ptr<ILogWriter> writer);
 
 	private:
 		Logger() = default;
 		Logger(const Logger& other) = delete;
 
 		std::unique_ptr<ILogFormatter> m_Formatter;
-		std::unique_ptr<ILogWriter> m_Writer;
+		std::vector<std::unique_ptr<ILogWriter>> m_Writer;
 	};
 }

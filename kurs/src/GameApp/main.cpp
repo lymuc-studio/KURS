@@ -11,6 +11,7 @@
 #include "Core/TypeName.hpp"
 #include "Core/TypeID.hpp"
 #include "Core/FormatString.hpp"
+#include "Core/Timer.hpp"
 
 #include "Debug/Logging/Logger.hpp"
 #include "Debug/Logging/ConsoleLogWriter.hpp"
@@ -21,7 +22,8 @@ int main()
 {
 	kurs::Logger::Get()
 		.SetFormatter(std::make_unique<kurs::TimedLogFormatter>())
-		.SetWriter(std::make_unique<kurs::FileLogWriter>());
+		.AddWriter(std::make_unique<kurs::FileLogWriter>())
+		.AddWriter(std::make_unique<kurs::ConsoleLogWriter>());
 
 	if (0 != SDL_Init(SDL_INIT_EVERYTHING))
 	{
@@ -51,9 +53,15 @@ int main()
 		SDL_WINDOW_RESIZABLE
 	);
 
+	kurs::Timer timer;
+
 	bool running = true;
 	while (running)
 	{
+		timer.Tick();
+
+		KURS_LOG(Debug, "FPS: %f", 1.0f / timer.GetDeltaTime().GetSeconds());
+
 		for (SDL_Event event{}; SDL_PollEvent(&event);)
 		{
 			if (event.type == SDL_EVENT_QUIT)
