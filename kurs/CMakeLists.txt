@@ -3,11 +3,15 @@ add_executable(
 	./src/Core/TypeID.cpp
 	./src/Core/FormatString.cpp
 	./src/Core/Timer.cpp
+
 	./src/Debug/Assertion/AssertImpl.cpp
 	./src/Debug/Logging/Logger.cpp
 	./src/Debug/Logging/TimedLogFormatter.cpp
 	./src/Debug/Logging/ConsoleLogWriter.cpp
 	./src/Debug/Logging/FileLogWriter.cpp
+	
+	./src/Memory/StandardAllocator.cpp
+	
 	./src/GameApp/main.cpp
 )
 
