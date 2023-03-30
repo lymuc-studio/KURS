@@ -13,6 +13,9 @@
 #include "Core/FormatString.hpp"
 #include "Core/Timer.hpp"
 
+#include "Memory/ObjectAllocator.hpp"
+#include "Memory/StandardAllocator.hpp"
+
 #include "Debug/BreakPoint.hpp"
 #include "Debug/Assertion/Assert.hpp"
 #include "Debug/Logging/Logger.hpp"
@@ -20,12 +23,42 @@
 #include "Debug/Logging/FileLogWriter.hpp"
 #include "Debug/Logging/TimedLogFormatter.hpp"
 
+class alignas(1024) CustomType
+{
+public:
+	CustomType()
+	{
+		KURS_LOG(Info, "Instance created");
+	}
+
+	~CustomType()
+	{
+		KURS_LOG(Info, "Instance destroyed");
+	}
+
+	void PrintAddr()
+	{
+		KURS_LOG(Info, "Instance location: %p", this);
+	}
+
+private:
+	char Gigabyte[1024ull * 1024 * 1024 * 1024];
+};
+
 int main()
 {
 	kurs::Logger::Get()
 		.SetFormatter(std::make_unique<kurs::TimedLogFormatter>())
 		.AddWriter(std::make_unique<kurs::FileLogWriter>())
 		.AddWriter(std::make_unique<kurs::ConsoleLogWriter>());
+
+	kurs::AllocatorSpecification spec{ sizeof(CustomType), alignof(CustomType) };
+
+	kurs::ObjectAllocator<CustomType> alloc(
+		std::make_unique<kurs::StandardAllocator>(spec)
+	);
+
+	auto inst = alloc.CreateInstanceShared();
 
 	if (0 != SDL_Init(SDL_INIT_EVERYTHING))
 	{
