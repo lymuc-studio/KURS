@@ -13,6 +13,8 @@
 #include "Core/FormatString.hpp"
 #include "Core/Timer.hpp"
 
+#include "Debug/BreakPoint.hpp"
+#include "Debug/Assertion/Assert.hpp"
 #include "Debug/Logging/Logger.hpp"
 #include "Debug/Logging/ConsoleLogWriter.hpp"
 #include "Debug/Logging/FileLogWriter.hpp"
@@ -52,15 +54,54 @@ int main()
 		720,
 		SDL_WINDOW_RESIZABLE
 	);
+	SDL_Renderer* render = SDL_CreateRenderer(
+		window, 
+		nullptr, 
+		SDL_RENDERER_ACCELERATED
+	);
+	SDL_SetRenderVSync(render, 1);
+
+	SDL_RendererInfo renderInfo = {};
+	SDL_GetRendererInfo(render, &renderInfo);
+
+	KURS_LOG(Info, "Graphics device: %s", renderInfo.name);
 
 	kurs::Timer timer;
+	float intervalSeconds = 0.0;
 
 	bool running = true;
 	while (running)
 	{
 		timer.Tick();
+		intervalSeconds += timer.GetDeltaTime().GetSeconds();
 
-		KURS_LOG(Debug, "FPS: %f", 1.0f / timer.GetDeltaTime().GetSeconds());
+		SDL_SetRenderDrawColor(render, 0, 0, 0, 0);
+		SDL_RenderClear(render);
+
+		int windowWidth = 0;
+		int windowHeight = 0;
+		SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+
+		float targetRatio = 16.0 / 9.0;
+		float currentRatio = float(windowWidth) / windowHeight;
+
+		float scale = windowWidth / 1920.0f;
+
+		SDL_SetRenderScale(render,  scale, scale);
+		
+		SDL_FRect r;
+		r.x = 10;
+		r.y = 10;
+		r.w = 150;
+		r.h = 150;
+		SDL_SetRenderDrawColor(render, 0, 255, 0, 255);
+		SDL_RenderFillRect(render, &r);
+
+		if (intervalSeconds >= 2.0f)
+		{
+			KURS_LOG(Debug, "FPS: %f", 1.0f / timer.GetDeltaTime().GetSeconds());
+			intervalSeconds = 0.0f;
+		}
 
 		for (SDL_Event event{}; SDL_PollEvent(&event);)
 		{
@@ -74,8 +115,16 @@ int main()
 			{
 				SDL_Keycode keyCode = SDL_GetKeyFromScancode(event.key.keysym.scancode);
 				KURS_LOG(Debug, "Key pressed: %s", SDL_GetKeyName(keyCode));
+			
+				if (keyCode == SDLK_b)
+				{
+					KURS_ASSERT(false, "You should not press the %s key", SDL_GetKeyName(keyCode));
+					std::cout << "Stuff happening after assert...\n";
+				}
 			}
 		}
+
+		SDL_RenderPresent(render);
 	}
 
 	SDL_DestroyWindow(window);
