@@ -41,7 +41,7 @@ namespace kurs
 		int second = localCurrentTime->tm_sec;
 
 		return formatString(
-			"%s %.2d:%.2d:%.2d <%s, %d> %s :: %s",
+			"%s %.2d:%.2d:%.2d <%s, %u> %s :: %s",
 			levelRepr[data.Level].data(),
 			hour,
 			minute,
