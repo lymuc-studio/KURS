@@ -67,7 +67,6 @@ namespace kurs
 			return;
 		}
 
-
 		KURS_LOG(Debug, "Freeing mem: %p", mem);
 		
 		std::byte* original = reinterpret_cast<std::byte**>(mem)[-1];
