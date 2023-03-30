@@ -75,6 +75,6 @@ namespace kurs
 				&& spec.Alignment == alignment;
 		}
 
-		std::unique_ptr<Allocator> m_PlaceAllocator = nullptr;
-	};	
+		std::unique_ptr<Allocator> m_PlaceAllocator;
+	};
 }
