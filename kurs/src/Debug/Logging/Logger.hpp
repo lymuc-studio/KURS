@@ -31,9 +31,9 @@ namespace kurs
 
 	struct LogData
 	{
-		LogLevel Level;
+		LogLevel Level = LogLevel_Trace;
 		std::string FileName;
-		std::uint32_t LineNumber;
+		std::uint32_t LineNumber = 0;
 		std::string ScopeName;
 		std::string Message;
 	};
