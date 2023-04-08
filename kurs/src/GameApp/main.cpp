@@ -42,7 +42,7 @@ public:
 	}
 
 private:
-	char Gigabyte[1024ull * 1024 * 1024 * 1024];
+	char Mebibyte[1024ull * 1024 * 1024];
 };
 
 int main()
@@ -57,6 +57,9 @@ int main()
 	kurs::ObjectAllocator<CustomType> alloc(
 		std::make_unique<kurs::StandardAllocator>(spec)
 	);
+
+	auto another = std::move(alloc);
+	alloc = std::move(another);
 
 	auto inst = alloc.CreateInstanceShared();
 
@@ -107,6 +110,8 @@ int main()
 	{
 		timer.Tick();
 		intervalSeconds += timer.GetDeltaTime().GetSeconds();
+
+		alloc.CreateInstance();
 
 		SDL_SetRenderDrawColor(render, 0, 0, 0, 0);
 		SDL_RenderClear(render);
