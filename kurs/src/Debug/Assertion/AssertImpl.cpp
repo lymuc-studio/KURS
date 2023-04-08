@@ -12,6 +12,7 @@ namespace kurs::detail
 		std::string_view fileName,
 		std::uint32_t lineNumber,
 		std::string_view scopeName,
+		std::string_view expression,
 		std::string_view format,
 		...
 	)
@@ -19,6 +20,7 @@ namespace kurs::detail
 		m_Data.FileName = fileName;
 		m_Data.LineNumber = lineNumber;
 		m_Data.ScopeName = scopeName;
+		m_Data.Expression = expression;
 
 		va_list args;
 		va_start(args, format);
@@ -45,11 +47,13 @@ namespace kurs::detail
 		auto info = formatString(
 			"Assertion failure\n"
 			"File: %s, %u\n"
-			"Scope: %s\n\n"
+			"Scope: %s\n"
+			"Expression: %s\n\n"
 			"Details: %s\n",
 			m_Data.FileName.data(),
 			m_Data.LineNumber,
 			m_Data.ScopeName.data(),
+			m_Data.Expression.data(),
 			m_Data.Message.data()
 		);
 
@@ -59,6 +63,7 @@ namespace kurs::detail
 			info.data(),
 			nullptr
 		);
+		
 		return *this;
 	}
 

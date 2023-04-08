@@ -9,6 +9,7 @@ namespace kurs::detail
 		std::string FileName;
 		std::uint32_t LineNumber = 0;
 		std::string ScopeName;
+		std::string Expression;
 		std::string Message;
 	};
 
@@ -19,6 +20,7 @@ namespace kurs::detail
 			std::string_view fileName,
 			std::uint32_t lineNumber,
 			std::string_view scopeName,
+			std::string_view expression,
 			std::string_view format = "",
 			...
 		);
