@@ -15,7 +15,7 @@
 #endif
 
 #ifndef KURS_COMPILER_ID
-#	error Unknown compiler
+#	error "Unknown compiler"
 #endif
 
 namespace kurs
