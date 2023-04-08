@@ -2,24 +2,28 @@
 
 #include <ctime>
 
+#include <mutex>
+
 namespace kurs
 {
 	FileLogWriter::FileLogWriter(std::string_view fileName)
-		: m_Out(fileName.data(), std::ios::app)
+		: m_OutFile(fileName.data(), std::ios::app)
 	{
 		WriteDate();
 	}
 
 	FileLogWriter::~FileLogWriter()
 	{
-		m_Out << "\n\n";
+		std::lock_guard outFileGuard(m_OutFileMutex);
+		m_OutFile << "\n\n";
 	}
 
 	void FileLogWriter::WriteLine(std::string_view message)
 	{
 		if (message.size())
 		{
-			m_Out << message << std::endl;
+			std::lock_guard outFileGuard(m_OutFileMutex);
+			m_OutFile << message << std::endl;
 		}
 	}
 
@@ -27,6 +31,7 @@ namespace kurs
 	{
 		std::time_t time = std::time(nullptr);
 
-		m_Out << std::ctime(&time) << "\n";
+		std::lock_guard outFileGuard(m_OutFileMutex);
+		m_OutFile << std::ctime(&time) << "\n";
 	}
 }

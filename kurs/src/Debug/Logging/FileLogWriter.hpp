@@ -3,6 +3,7 @@
 #include "Debug/Logging/Logger.hpp"
 
 #include <fstream>
+#include <mutex>
 
 namespace kurs
 {
@@ -17,6 +18,7 @@ namespace kurs
 	private:
 		void WriteDate();
 
-		std::ofstream m_Out;
+		std::ofstream m_OutFile;
+		std::mutex m_OutFileMutex;
 	};
 }
