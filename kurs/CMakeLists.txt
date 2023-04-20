@@ -9,9 +9,7 @@ add_executable(
 	./src/Debug/Logging/TimedLogFormatter.cpp
 	./src/Debug/Logging/ConsoleLogWriter.cpp
 	./src/Debug/Logging/FileLogWriter.cpp
-	
-	./src/Memory/StandardAllocator.cpp
-	
+
 	./src/GameApp/main.cpp
 )
 
