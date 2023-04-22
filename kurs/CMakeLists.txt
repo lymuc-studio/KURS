@@ -11,6 +11,9 @@ add_executable(
 	./src/Debug/Logging/ConsoleLogWriter.cpp
 	./src/Debug/Logging/FileLogWriter.cpp
 
+	./src/Event/EventBus.cpp
+	./src/Event/EventSubscriber.cpp
+
 	./src/GameApp/main.cpp
 )
 

@@ -6,6 +6,54 @@
 #include "Core/TypeName.hpp"
 #include "Core/IDRegistry.hpp"
 
+#include "Event/EventBase.hpp"
+#include "Event/EventBus.hpp"
+#include "Event/EventSubscriber.hpp"
+
+struct AppStartEvent : public kurs::Event<AppStartEvent>
+{
+	int AppCode = 156;
+};
+
+struct AppShutDownEvent : public kurs::Event<AppShutDownEvent>
+{
+	int ReturnCode = 0;
+};
+
+void externalCallback(AppShutDownEvent& e)
+{
+	KURS_LOG(Warn, "Destroy some global state");
+}
+
+class App
+{
+public:
+	App(kurs::EventBus* bus)
+	{
+		m_Subscriber.SetBus(bus);
+
+		m_Subscriber
+			.BeginThis(this)
+				.AddMethod(&App::OnAppStart)
+				.AddMethod(&App::OnAppShutDown)
+			.EndThis()
+			.AddFunction(externalCallback);
+	}
+
+private:
+	void OnAppStart(AppStartEvent& e)
+	{
+		KURS_LOG(Warn, "Start up: %d", e.AppCode);
+	}
+
+	void OnAppShutDown(AppShutDownEvent& e)
+	{
+		KURS_LOG(Warn, "Shut down: %d", e.ReturnCode);
+	}
+
+	kurs::EventSubscriber m_Subscriber;
+};
+
 int main()
 {
 	kurs::LogLevel verbosity = kurs::LogLevel_Debug;
@@ -15,28 +63,19 @@ int main()
 		.AddWriter(std::make_unique<kurs::ConsoleLogWriter>())
 		.SetFormatter(std::make_unique<kurs::TimedLogFormatter>(verbosity));
 
-	kurs::IDRegistry registry;
+	kurs::EventBus mainBus;
 
-	auto id1 = registry.GenerateID();
-	auto id2 = registry.GenerateID();
-	auto id3 = registry.GenerateID();
-	
-	registry.DestroyID(id3);
-	registry.DestroyID(id2);
-	// registry.DestroyID(id1);
+	auto inst = new App(&mainBus);
 
-	auto id4 = registry.GenerateID();
-	auto id5 = registry.GenerateID();
-	auto id6 = registry.GenerateID();
+	AppStartEvent start;
+	mainBus.Publish(start);
 
-	KURS_LOG(Info, "id4 = %zu", id4);
-	KURS_LOG(Info, "id5 = %zu", id5);
-	KURS_LOG(Info, "id6 = %zu", id6);
+	AppShutDownEvent shutdown;
+	mainBus.Publish(shutdown);
 
-	registry.DestroyID(id6);
-	registry.DestroyID(id5);
-	registry.DestroyID(id4);
-	registry.DestroyID(id3);
-	registry.DestroyID(id2);
-	registry.DestroyID(id1);
+	delete inst;
+
+	mainBus.Publish(start);
+
+	mainBus.Publish(shutdown);
 }
