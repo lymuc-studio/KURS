@@ -3,6 +3,7 @@ add_executable(
 	./src/Core/TypeID.cpp
 	./src/Core/FormatString.cpp
 	./src/Core/Timer.cpp
+	./src/Core/IDRegistry.cpp
 
 	./src/Debug/Assertion/AssertImpl.cpp
 	./src/Debug/Logging/Logger.cpp
