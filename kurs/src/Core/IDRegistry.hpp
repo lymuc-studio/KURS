@@ -8,6 +8,7 @@ namespace kurs
 	{
 	public:
 		using IDType = std::size_t;
+		static constexpr IDType c_InvalidID = -1;
 
 		IDType GenerateID();
 		bool CheckIDExists(IDType id);
