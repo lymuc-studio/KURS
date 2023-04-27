@@ -50,24 +50,21 @@ namespace kurs::detail
 	
 namespace kurs
 {
-#if KURS_COMPILER_ID == KURS_COMPILER_GCC
 	template<typename T>
-	constexpr std::string_view getTypeName()
+	constexpr std::string_view getStaticTypeName()
 	{
-		return detail::getTypeNameGnu<T>();
+#		if KURS_COMPILER_ID == KURS_COMPILER_GCC
+			return detail::getTypeNameGnu<T>();
+#		elif KURS_COMPILER_ID == KURS_COMPILER_CLANG
+			return detail::getTypeNameClang<T>();
+#		elif KURS_COMPILER_ID == KURS_COMPILER_MSVC
+			return detail::getTypeNameMsvc<T>();
+#		endif
 	}
-#elif KURS_COMPILER_ID == KURS_COMPILER_CLANG
-	template<typename T>
-	constexpr std::string_view getTypeName()
-	{
-		return detail::getTypeNameClang<T>();
-	}
-#elif KURS_COMPILER_ID == KURS_COMPILER_MSVC
-	template<typename T>
-	constexpr std::string_view getTypeName()
-	{
-		return detail::getTypeNameMsvc<T>();
-	}
-#endif
 
+	template<typename T>
+	std::string getTypeName()
+	{
+		return std::string(getStaticTypeName<T>());
+	}
 }
