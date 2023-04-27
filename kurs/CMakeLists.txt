@@ -13,8 +13,10 @@ add_executable(
 
 	./src/Event/EventBus.cpp
 	./src/Event/EventSubscriber.cpp
+	./src/Event/EventPoster.cpp
 
-	./src/GameApp/main.cpp
+	./src/Game/App.cpp
+	./src/Game/main.cpp
 )
 
 target_include_directories(
