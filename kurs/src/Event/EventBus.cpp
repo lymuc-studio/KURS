@@ -27,6 +27,11 @@ namespace kurs::detail
 
 	void EventSubscriberRegistry::RemoveCallback(IDRegistry::IDType subscriberID)
 	{
+		KURS_ASSERT(
+			m_SubscriberRegistry.CheckIDExists(subscriberID), 
+			"Invalid subscriber ID"
+		);
+
 		m_Callbacks[subscriberID].reset();
 		m_SubscriberRegistry.DestroyID(subscriberID);
 
@@ -55,19 +60,19 @@ namespace kurs
 	//
 	//+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-	UniqueEventSubscription::UniqueEventSubscription(
-		EventID eventID, 
+	EventSubscription::EventSubscription(
+		TypeID eventTypeID, 
 		IDRegistry::IDType subscriberID
 	)
-		: m_EventID(eventID)
+		: m_EventTypeID(eventTypeID)
 		, m_SubscriberID(subscriberID)
 	{
 	}
 
-	UniqueEventSubscription::UniqueEventSubscription(
-		UniqueEventSubscription&& other
+	EventSubscription::EventSubscription(
+		EventSubscription&& other
 	) noexcept
-		: m_EventID(std::exchange(other.m_EventID, TypeID_Undefined))
+		: m_EventTypeID(std::exchange(other.m_EventTypeID, TypeID_Undefined))
 		, m_SubscriberID(
 				std::exchange(
 					other.m_SubscriberID, 
@@ -77,8 +82,8 @@ namespace kurs
 	{
 	}
 
-	UniqueEventSubscription& UniqueEventSubscription::operator=(
-		UniqueEventSubscription&& other
+	EventSubscription& EventSubscription::operator=(
+		EventSubscription&& other
 	) noexcept
 	{
 		if (this == &other)
@@ -86,7 +91,7 @@ namespace kurs
 			return *this;
 		}
 
-		m_EventID = std::exchange(other.m_EventID, TypeID_Undefined);
+		m_EventTypeID = std::exchange(other.m_EventTypeID, TypeID_Undefined);
 		m_SubscriberID = std::exchange(
 			other.m_SubscriberID, 
 			IDRegistry::c_InvalidID
@@ -95,12 +100,12 @@ namespace kurs
 		return *this;
 	}
 
-	EventID UniqueEventSubscription::GetEventID() const
+	TypeID EventSubscription::GetEventTypeID() const
 	{
-		return m_EventID;
+		return m_EventTypeID;
 	}
 
-	IDRegistry::IDType UniqueEventSubscription::GetSubscriberID() const
+	IDRegistry::IDType EventSubscription::GetSubscriberID() const
 	{
 		return m_SubscriberID;
 	}
@@ -111,35 +116,39 @@ namespace kurs
 	//
 	//+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-	void EventBus::Unsubscribe(UniqueEventSubscription subscription)
+	void EventBus::Unsubscribe(EventSubscription subscription)
 	{
-		EventID evID = subscription.GetEventID();
+		TypeID evTypeID = subscription.GetEventTypeID();
 		IDRegistry::IDType subID = subscription.GetSubscriberID();
 	
-		KURS_ASSERT(TypeID_Undefined != evID && IDRegistry::c_InvalidID != subID);
+		KURS_ASSERT(
+			TypeID_Undefined != evTypeID 
+			&& evTypeID < m_EventSpecificRegistry.size()
+			&& IDRegistry::c_InvalidID != subID
+		);
 
-		m_EventSpecificRegistry[evID].RemoveCallback(subID);
+		m_EventSpecificRegistry[evTypeID].RemoveCallback(subID);
 	
 		KURS_LOG(
 			Debug,
 			"Event callback removed. EventID %zu. Subscriber ID %zu", 
-			evID, 
+			evTypeID, 
 			subID
 		);
 	}
 
-	void EventBus::Publish(EventBase& event)
+	void EventBus::PostEvent(EventBase& event)
 	{
 		KURS_LOG(Debug, "Publishing %s", event.GetName().data());
 		
-		EventID evID = event.GetID();
+		TypeID evTypeID = event.GetTypeID();
 		
-		if (evID >= m_EventSpecificRegistry.size())
+		if (evTypeID >= m_EventSpecificRegistry.size())
 		{
 			KURS_LOG(Warn, "No callbacks available for %s", event.GetName().data());
 			return;
 		}
 	
-		m_EventSpecificRegistry[evID].Notify(event);
+		m_EventSpecificRegistry[evTypeID].Notify(event);
 	}
 }

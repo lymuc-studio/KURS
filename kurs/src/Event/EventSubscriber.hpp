@@ -44,6 +44,7 @@ namespace kurs
 	{
 	public:
 		EventSubscriber() = default;
+		explicit EventSubscriber(EventBus* bus);
 		
 		EventSubscriber(EventSubscriber&& other) noexcept;
 
@@ -55,15 +56,15 @@ namespace kurs
 		EventBus* GetBus() const;
 		void Reset();
 
-		void AddCustomSubscription(UniqueEventSubscription subscription);
+		void AddCustomSubscription(EventSubscription subscription);
 
 		template<typename EventT>
-		EventSubscriber& AddFunction(void(*function)(EventT&))
+		EventSubscriber& AddFunction(void(*func)(EventT&))
 		{
-			KURS_ASSERT(function, "Trying to bind a nullptr function");
+			KURS_ASSERT(func, "Trying to bind a nullptr function");
 			KURS_ASSERT(m_Bus, "EventBus is not set");
 			
-			AddCustomSubscription(m_Bus->Subscribe<EventT>(function));
+			AddCustomSubscription(m_Bus->Subscribe<EventT>(func));
 
 			return *this;
 		}
@@ -80,7 +81,7 @@ namespace kurs
 		void Unsubscribe();
 
 		EventBus* m_Bus = nullptr;
-		std::vector<UniqueEventSubscription> m_Subscriptions;
+		std::vector<EventSubscription> m_Subscriptions;
 	};
 }
 

@@ -4,45 +4,27 @@
 
 #include "Core/TypeID.hpp"
 
-#include "Debug/Logging/Logger.hpp"
-
 namespace kurs
 {
-	using EventID = TypeID;
-
-	template<typename EventT>
-	EventID getEventID()
+	struct EventBase
 	{
-		return getTypeID<EventT>();
-	}
-
-	template<typename EventT>
-	std::string getEventName()
-	{
-		return std::string(getTypeName<EventT>());
-	}
-
-	class EventBase
-	{
-	public:
 		virtual ~EventBase() = default;
 
-		virtual TypeID GetID() const = 0;
+		virtual TypeID GetTypeID() const = 0;
 		virtual std::string GetName() const = 0;
 	};
 
 	template<typename DerivedT>
-	class Event : public EventBase
+	struct Event : public EventBase
 	{
-	public:
-		TypeID GetID() const override final
+		TypeID GetTypeID() const override final
 		{
-			return getEventID<DerivedT>();
+			return getTypeID<DerivedT>();
 		}
 
 		std::string GetName() const override final
 		{
-			return getEventName<DerivedT>();
+			return getTypeName<DerivedT>();
 		}
 	};
 }
@@ -57,15 +39,8 @@ namespace kurs::detail
 			return nullptr;
 		}
 
-		KURS_LOG(
-			Debug,
-			"Casting an event from %s to %s", event->GetName().data(),
-			getEventName<EventT>().data()
-		);
-
-		if (getEventID<EventT>() != event->GetID())
+		if (getTypeID<EventT>() != event->GetTypeID())
 		{
-			KURS_LOG(Debug, "Cast failed");
 			return nullptr;
 		}
 

@@ -32,7 +32,7 @@ namespace kurs::detail
 			KURS_LOG(
 				Debug, 
 				"EventCallback<%s> initialized", 
-				getEventName<EventT>().data()
+				getTypeName<EventT>().data()
 			);
 		}
 
@@ -47,7 +47,7 @@ namespace kurs::detail
 			KURS_LOG(
 				Warn,
 				"Event type mismatch: %s expected, but %s provied",
-				getEventName<EventT>().data(),
+				getTypeName<EventT>().data(),
 				event.GetName().data()
 			);
 		}
@@ -71,28 +71,23 @@ namespace kurs::detail
 
 namespace kurs
 {
-	class UniqueEventSubscription
+	class EventSubscription
 	{
 	public:
-		UniqueEventSubscription() = default;
-		UniqueEventSubscription(EventID eventID, IDRegistry::IDType subscriberID);
+		EventSubscription() = default;
+		EventSubscription(TypeID eventTypeID, IDRegistry::IDType subscriberID);
 
-		UniqueEventSubscription(const UniqueEventSubscription& other) = delete;
-		UniqueEventSubscription(UniqueEventSubscription&& other) noexcept;
-
-		UniqueEventSubscription& operator=(
-			const UniqueEventSubscription& other
-		) = delete;
+		EventSubscription(EventSubscription&& other) noexcept;
 		
-		UniqueEventSubscription& operator=(
-			UniqueEventSubscription&& other
+		EventSubscription& operator=(
+			EventSubscription&& other
 		) noexcept;
 
-		EventID GetEventID() const;
+		TypeID GetEventTypeID() const;
 		IDRegistry::IDType GetSubscriberID() const;
 
 	private:
-		EventID m_EventID = TypeID_Undefined;
+		TypeID m_EventTypeID = TypeID_Undefined;
 		IDRegistry::IDType m_SubscriberID = IDRegistry::c_InvalidID;
 	};
 
@@ -100,30 +95,30 @@ namespace kurs
 	{
 	public:
 		template<typename EventT>
-		UniqueEventSubscription Subscribe(
+		EventSubscription Subscribe(
 			detail::EventCallbackFunc<EventT> callbackFunc
 		)
 		{
-			EventID evID = getEventID<EventT>();
-			if (evID >= m_EventSpecificRegistry.size())
+			TypeID evTypeID = getTypeID<EventT>();
+			if (evTypeID >= m_EventSpecificRegistry.size())
 			{
-				m_EventSpecificRegistry.resize(evID + 1);
+				m_EventSpecificRegistry.resize(evTypeID + 1);
 			}
 			
 			auto callback = std::make_unique<detail::EventCallback<EventT>>(
 				callbackFunc
 			);
 		
-			IDRegistry::IDType subID = m_EventSpecificRegistry[evID].AddCallback(
+			IDRegistry::IDType subID = m_EventSpecificRegistry[evTypeID].AddCallback(
 				std::move(callback)
 			);
 		
-			return UniqueEventSubscription(evID, subID);
+			return EventSubscription(evTypeID, subID);
 		}
 
-		void Unsubscribe(UniqueEventSubscription subscription);
+		void Unsubscribe(EventSubscription subscription);
 
-		void Publish(EventBase& event);
+		void PostEvent(EventBase& event);
 
 	private:
 		std::vector<detail::EventSubscriberRegistry> m_EventSpecificRegistry;

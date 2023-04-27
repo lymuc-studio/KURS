@@ -2,6 +2,11 @@
 
 namespace kurs
 {
+	EventSubscriber::EventSubscriber(EventBus* bus)
+		: m_Bus(bus)
+	{
+	}
+
 	EventSubscriber::EventSubscriber(EventSubscriber&& other) noexcept
 		: m_Bus(std::exchange(other.m_Bus, nullptr))
 		, m_Subscriptions(std::move(other.m_Subscriptions))
@@ -44,7 +49,7 @@ namespace kurs
 	}
 
 	void EventSubscriber::AddCustomSubscription(
-		UniqueEventSubscription subscription
+		EventSubscription subscription
 	)
 	{
 		m_Subscriptions.push_back(std::move(subscription));
