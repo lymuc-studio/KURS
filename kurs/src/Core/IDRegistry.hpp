@@ -11,7 +11,7 @@ namespace kurs
 		static constexpr IDType c_InvalidID = -1;
 
 		IDType GenerateID();
-		bool CheckIDExists(IDType id);
+		bool CheckIDExists(IDType id) const;
 		void DestroyID(IDType id);
 
 	private:

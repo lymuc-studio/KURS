@@ -14,7 +14,7 @@ namespace kurs
 		return RecycleID();
 	}
 
-	bool IDRegistry::CheckIDExists(IDType id)
+	bool IDRegistry::CheckIDExists(IDType id) const
 	{
 		return id < m_InUse.size() && CheckIDInUse(id);
 	}
