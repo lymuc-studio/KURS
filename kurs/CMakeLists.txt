@@ -1,5 +1,6 @@
 add_executable(
 	kursapp
+
 	./src/Core/TypeID.cpp
 	./src/Core/FormatString.cpp
 	./src/Core/Timer.cpp
@@ -14,6 +15,8 @@ add_executable(
 	./src/Event/EventBus.cpp
 	./src/Event/EventSubscriber.cpp
 	./src/Event/EventPoster.cpp
+
+	./src/ECS/EntityRegistry.cpp
 
 	./src/Game/App.cpp
 	./src/Game/main.cpp
