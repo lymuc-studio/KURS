@@ -13,7 +13,7 @@
 #include <array>
 #include <unordered_map>
 
+#include <type_traits>
 #include <functional>
 #include <utility>
-
 #include <memory>
