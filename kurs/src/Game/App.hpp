@@ -5,6 +5,9 @@
 #include "Event/EventSubscriber.hpp"
 #include "Event/EventPoster.hpp"
 
+#include "ECS/EntityRegistry.hpp"
+#include "ECS/ComponentBase.hpp"
+
 #include <SDL3/SDL.h>
 
 namespace kurs
@@ -41,6 +44,8 @@ namespace kurs
 		void OnRun(AppRunEvent& event);
 		void OnQuit(AppQuitEvent& event);
 
+		void TestECS();
+
 		bool m_Running = false;
 
 		EventSubscriber m_Subscriber;
@@ -49,5 +54,7 @@ namespace kurs
 		Timer m_FrameTimer;
 	
 		SDL_Window* m_Window = nullptr;
+
+		detail::EntityRegistry m_Entities;
 	};
 }
