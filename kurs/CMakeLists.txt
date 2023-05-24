@@ -17,9 +17,17 @@ add_executable(
 	./src/Event/EventPoster.cpp
 
 	./src/ECS/EntityRegistry.cpp
+	./src/ECS/Entity.cpp
+	./src/ECS/Scene.cpp
 
+	./src/Scripting/Components.cpp
+	./src/Scripting/NativeScript.cpp
+	./src/Scripting/ScriptSystem.cpp
+	
 	./src/Game/App.cpp
+	./src/Game/FpsDisplayScript.cpp
 	./src/Game/main.cpp
+
 )
 
 target_include_directories(

@@ -17,10 +17,8 @@ int main()
 			.SetFormatter(std::make_unique<kurs::TimedLogFormatter>(verbosity))
 			.AddWriter(std::make_unique<kurs::ConsoleLogWriter>())
 			.AddWriter(std::make_unique<kurs::FileLogWriter>("kurs.log"));
-
-		kurs::EventBus mainBus;
-		kurs::App app(&mainBus);
-
+	
+		kurs::App app;
 		app.Run();
 	}
 	SDL_Quit();
