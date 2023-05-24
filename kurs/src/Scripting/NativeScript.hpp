@@ -32,6 +32,14 @@ namespace kurs
 			return m_Entity.AddComponent<ComponentT>(std::forward<ArgsT>(args)...);
 		}
 
+		template<typename ComponentT, typename... ArgsT>
+		ComponentT& ReplaceComponent(ArgsT&&... args)
+		{
+			return m_Entity.ReplaceComponent<ComponentT>(
+				std::forward<ArgsT>(args)...
+			);
+		}
+
 		template<typename ComponentT>
 		ComponentT& GetComponent()
 		{

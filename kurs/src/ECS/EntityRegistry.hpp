@@ -56,6 +56,17 @@ namespace kurs::detail
 			);
 		}
 
+		template<typename ComponentT, typename... ArgsT>
+		ComponentT& ReplaceComponent(EntityID eid, ArgsT&&... args)
+		{
+			if (HasComponent<ComponentT>(eid))
+			{
+				RemoveComponent<ComponentT>(eid);
+			}
+			
+			return EmplaceComponent<ComponentT>(eid, std::forward<ArgsT>(args)...);
+		}
+
 		template<typename ComponentT>
 		ComponentT& GetComponent(EntityID eid)
 		{

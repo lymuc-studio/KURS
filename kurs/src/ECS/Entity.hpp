@@ -57,8 +57,24 @@ namespace kurs
 				"Could not add '%s' component: trying to modify invalid entity",
 				getTypeName<ComponentT>().data()
 			);
+			
 			return GetValidRegistry().EmplaceComponent<ComponentT>(
 				m_ID, 
+				std::forward<ArgsT>(args)...
+			);
+		}
+
+		template<typename ComponentT, typename... ArgsT>
+		ComponentT& ReplaceComponent(ArgsT&&... args)
+		{
+			KURS_ASSERT(
+				CheckEntityValid(),
+				"Could not replace '%s' component: trying to modify invalid entity",
+				getTypeName<ComponentT>().data()
+			);
+			
+			return GetValidRegistry().ReplaceComponent<ComponentT>(
+				m_ID,
 				std::forward<ArgsT>(args)...
 			);
 		}

@@ -12,11 +12,9 @@ namespace kurs
 
 		Entity fpsDisplay = m_MainScene.CreateEntity();
 		
-		fpsDisplay.AddComponent<NativeScriptComponent>(
+		fpsDisplay.ReplaceComponent<NativeScriptComponent>(
 			kurs::BindScript<FpsDisplayScript>()
 		);
-		
-		m_Entities.push_back(fpsDisplay);
 	}
 
 	void App::Run()
