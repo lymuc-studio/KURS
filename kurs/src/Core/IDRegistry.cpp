@@ -1,80 +1,40 @@
 #include "Core/IDRegistry.hpp"
 
-#include "Debug/Assertion/Assert.hpp"
-
 namespace kurs
 {
 	IDRegistry::IDType IDRegistry::GenerateID()
 	{
-		if (!CheckPreservedIDsAvailable())
+		if (m_RecycledIDs.size())
 		{
-			return CreateID();
+			IDType id = m_RecycledIDs.top();
+			m_RecycledIDs.pop();
+		
+			m_ExistingIDs.insert(id);
+
+			return id;
 		}
-	
-		return RecycleID();
+
+		return *m_ExistingIDs.insert(m_NextID++).first;
 	}
 
 	bool IDRegistry::CheckIDExists(IDType id) const
 	{
-		return id < m_InUse.size() && CheckIDInUse(id);
+		return m_ExistingIDs.find(id) != m_ExistingIDs.end();
 	}
 
 	void IDRegistry::DestroyID(IDType id)
 	{
-		KURS_ASSERT(
-			CheckIDExists(id), 
-			"Trying to destroy ID (%zu) that does not exist", 
-			id
-		);
-		PreserveID(id);
+		m_ExistingIDs.erase(id);
+		m_RecycledIDs.push(id);
 	}
 
-	IDRegistry::IDType IDRegistry::RecycleID()
+	IDRegistry::ExistingIDRange IDRegistry::GetExistingIDs()
 	{
-		KURS_ASSERT(CheckPreservedIDsAvailable());
-
-		IDType id = m_FreeListTail;
-
-		m_InUse[id] = true;
-		m_FreeListTail = m_PrevFree[id];
-
-		return id;
-	}
-
-	void IDRegistry::PreserveID(IDType id)
-	{
-		KURS_ASSERT(CheckIDExists(id));
-		
-		m_InUse[id] = false;
-
-		if (!CheckPreservedIDsAvailable())
-		{
-			m_FreeListTail = id;
-			return;
-		}
-	
-		m_PrevFree[id] = m_FreeListTail;
-		m_FreeListTail = id;
-	}
-
-	bool IDRegistry::CheckPreservedIDsAvailable() const
-	{
-		return c_InvalidListIndex != m_FreeListTail;
+		return ExistingIDRange(m_ExistingIDs.begin(), m_ExistingIDs.end());
 	}
 	
-	bool IDRegistry::CheckIDInUse(IDType id) const
+	IDRegistry::ExistingIDConstRange IDRegistry::GetExistingIDs() const
 	{
-		return m_InUse[id];
-	}
-
-	IDRegistry::IDType IDRegistry::CreateID()
-	{
-		m_InUse.push_back(true);
-		m_PrevFree.push_back(c_InvalidListIndex);
-	
-		IDType id = m_InUse.size() - 1;
-		KURS_ASSERT(id + 1 == m_PrevFree.size());
-	
-		return id;
+		return ExistingIDRange(m_ExistingIDs.begin(), m_ExistingIDs.end());
 	}
 }

@@ -2,6 +2,8 @@
 
 #include "kurspch.hpp"
 
+#include "Core/IterableRange.hpp"
+
 namespace kurs
 {
 	class IDRegistry
@@ -10,22 +12,21 @@ namespace kurs
 		using IDType = std::size_t;
 		static constexpr IDType c_InvalidID = -1;
 
+		using ExistingIDRange = IterableRange<std::unordered_set<IDType>::iterator>;
+		
+		using ExistingIDConstRange 
+			= IterableRange<std::unordered_set<IDType>::const_iterator>;
+
 		IDType GenerateID();
 		bool CheckIDExists(IDType id) const;
 		void DestroyID(IDType id);
 
+		ExistingIDRange GetExistingIDs();
+		ExistingIDConstRange GetExistingIDs() const;
+
 	private:
-		IDType RecycleID();
-		void PreserveID(IDType id);
-		bool CheckPreservedIDsAvailable() const;
-		bool CheckIDInUse(IDType id) const;
-
-		IDType CreateID();
-
-		std::vector<bool> m_InUse;
-		std::vector<std::ptrdiff_t> m_PrevFree;
-
-		static constexpr std::ptrdiff_t c_InvalidListIndex = -1;
-		std::ptrdiff_t m_FreeListTail = c_InvalidListIndex;
+		IDType m_NextID = 0;
+		std::unordered_set<IDType> m_ExistingIDs;
+		std::stack<IDType, std::vector<IDType>> m_RecycledIDs;
 	};
 }
