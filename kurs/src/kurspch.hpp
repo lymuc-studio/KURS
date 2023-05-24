@@ -11,7 +11,9 @@
 
 #include <vector>
 #include <array>
+#include <stack>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <type_traits>
 #include <functional>
