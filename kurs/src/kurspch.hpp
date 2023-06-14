@@ -17,5 +17,6 @@
 
 #include <type_traits>
 #include <functional>
+#include <filesystem>
 #include <utility>
 #include <memory>
