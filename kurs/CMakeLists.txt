@@ -26,6 +26,8 @@ add_executable(
 	
 	./src/Asset/AssetRegistry.cpp
 
+	./src/Math/Vector.cpp
+
 	./src/Game/App.cpp
 	./src/Game/FpsDisplayScript.cpp
 	./src/Game/main.cpp
