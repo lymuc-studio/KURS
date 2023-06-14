@@ -25,7 +25,10 @@ namespace kurs
 	{
 		for (auto& system : m_Systems)
 		{
-			system->OnUpdate(ts);
+			if (system)
+			{
+				system->OnUpdate(ts);
+			}
 		}
 	}
 }
