@@ -35,6 +35,6 @@ namespace kurs
 	
 	IDRegistry::ExistingIDConstRange IDRegistry::GetExistingIDs() const
 	{
-		return ExistingIDRange(m_ExistingIDs.begin(), m_ExistingIDs.end());
+		return ExistingIDConstRange(m_ExistingIDs.begin(), m_ExistingIDs.end());
 	}
 }
