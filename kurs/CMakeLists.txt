@@ -24,6 +24,8 @@ add_executable(
 	./src/Scripting/NativeScript.cpp
 	./src/Scripting/ScriptSystem.cpp
 	
+	./src/Asset/AssetRegistry.cpp
+
 	./src/Game/App.cpp
 	./src/Game/FpsDisplayScript.cpp
 	./src/Game/main.cpp
